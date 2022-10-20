@@ -9,54 +9,19 @@ public class GameManager : MonoBehaviour
     bool RightDoorIsOpen = false;
     bool HoodIsOpen = false;
 
-    private const float offset = 0.001f;
-    /// <summary>
-    /// Draws a line in screen space between the 
-    /// <paramref name="startPixelPos"/> and the 
-    /// <paramref name="endPixelPos"/>. 
-    /// </summary>
-    public static void DrawLine(
-      Canvas canvas,
-      Camera camera,
-      Vector3 startPixelPos,
-      Vector3 endPixelPos)
-    {
-        if (camera == null || canvas == null)
-            return;
-        Vector3 startWorld = PixelToCameraClipPlane(
-          camera,
-          canvas,
-          startPixelPos);
-        Vector3 endWorld = PixelToCameraClipPlane(
-          camera,
-          canvas,
-          endPixelPos);
-        Gizmos.DrawLine(startWorld, endWorld);
-    }
-    /// <summary>
-    /// Converts the <paramref name="screenPos"/> to world space 
-    /// near the <paramref name="camera"/> near clip plane. The 
-    /// z component of the <paramref name="screenPos"/> 
-    /// will be overriden.
-    /// </summary>
-    private static Vector3 PixelToCameraClipPlane(
-      Camera camera,
-      Canvas canvas,
-      Vector3 screenPos)
-    {
-        // The canvas scale factor affects the
-        // screen position of all UI elements.
-        screenPos *= canvas.scaleFactor;
-        // The z-position defines the distance to the camera
-        // when using Camera.ScreenToWorldPoint.
-        screenPos.z = camera.nearClipPlane + offset;
-        return camera.ScreenToWorldPoint(screenPos);
-    }
+    [SerializeField] GameObject Wheel;
+    [SerializeField] GameObject Door;
+    [SerializeField] GameObject Engine;
+    [SerializeField] GameObject HeadLamp;
+    [SerializeField] GameObject RearLamp;
+
+
 
 
     void Update()
     {
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
         if (Physics.Raycast(ray, out hit))
         {
             if (Input.GetMouseButtonDown(1))
@@ -107,8 +72,66 @@ public class GameManager : MonoBehaviour
                         HoodIsOpen = true;
 
                     }
+                }
+            }
 
-
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (hit.collider.CompareTag("Wheel"))
+                {
+                    Wheel.SetActive(true);
+                    Door.SetActive(false);
+                    Engine.SetActive(false);
+                    HeadLamp.SetActive(false);
+                    RearLamp.SetActive(false);
+                }
+                else if (hit.collider.CompareTag("Engine"))
+                {
+                    Engine.SetActive(true);
+                    Wheel.SetActive(false);
+                    Door.SetActive(false);
+                    HeadLamp.SetActive(false);
+                    RearLamp.SetActive(false);
+                }
+                else if(hit.collider.CompareTag("HeadLight"))
+                {
+                    HeadLamp.SetActive(true);
+                    Wheel.SetActive(false);
+                    Door.SetActive(false);
+                    Engine.SetActive(false);
+                    RearLamp.SetActive(false);
+                }
+                else if(hit.collider.CompareTag("TailLight"))
+                {
+                    RearLamp.SetActive(true);
+                    Wheel.SetActive(false);
+                    Door.SetActive(false);
+                    Engine.SetActive(false);
+                    HeadLamp.SetActive(false);
+                }
+                else if(hit.collider.CompareTag("LeftDoor"))
+                {
+                    Wheel.SetActive(false);
+                    Door.SetActive(true);
+                    Engine.SetActive(false);
+                    HeadLamp.SetActive(false);
+                    RearLamp.SetActive(false);
+                }
+                else if(hit.collider.CompareTag("RightDoor"))
+                {
+                    Door.SetActive(true);
+                    Wheel.SetActive(false);
+                    Engine.SetActive(false);
+                    HeadLamp.SetActive(false);
+                    RearLamp.SetActive(false);
+                }
+                else
+                {
+                    Wheel.SetActive(false);
+                    Door.SetActive(false);
+                    Engine.SetActive(false);
+                    HeadLamp.SetActive(false);
+                    RearLamp.SetActive(false);
                 }
             }
         }

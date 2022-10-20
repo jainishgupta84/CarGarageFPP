@@ -7,6 +7,10 @@ TagManager:
   - LeftDoor
   - RightDoor
   - Hood
+  - Wheel
+  - Engine
+  - HeadLight
+  - TailLight
   layers:
   - Default
   - TransparentFX
